@@ -103,15 +103,15 @@ plt.show()
 fig = plt.figure()
 
 def animate(i): 
-    z = TempxTime[:,:,i]
+    z = TempxTime[:,:,i*5]
     cont = plt.contourf(ycells, xcells, z,10,cmap=plt.cm.jet)
 
     return cont  
 
-fr = int(iteration)
+fr = int(iteration/5)
 anim = FuncAnimation(fig, animate, frames=fr, interval= dt)
-plt.show(block= False)
-plt.pause(120)
+plt.show()
+
 # activate command below to save the animation
 # anim.save('animation_unsteady.gif')
 exit()
