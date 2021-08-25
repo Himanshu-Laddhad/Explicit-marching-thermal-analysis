@@ -99,14 +99,14 @@ fig = plt.figure()
 
 
 def animate(i): 
-    z = TempxTime[:,:,i*5]
+    z = TempxTime[:,:,i*20]
     cont = plt.contourf(ycells, xcells, z,20,cmap=plt.cm.jet)
 
     return cont  
 
-fr = int(iteration/5)
+fr = int(iteration/20)
 anim = FuncAnimation(fig, animate, frames=fr, interval= dt)
-anim.save('animation_unsteady.mp4')
+anim.save('animation_unsteady.gif')
 
 
 
