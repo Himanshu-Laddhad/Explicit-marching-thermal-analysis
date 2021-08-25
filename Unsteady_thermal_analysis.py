@@ -104,7 +104,7 @@ fig = plt.figure()
 
 def animate(i): 
     z = TempxTime[:,:,i*5]
-    cont = plt.contourf(ycells, xcells, z,10,cmap=plt.cm.jet)
+    cont = plt.contourf(ycells, xcells, z,15,cmap=plt.cm.jet)
 
     return cont  
 
