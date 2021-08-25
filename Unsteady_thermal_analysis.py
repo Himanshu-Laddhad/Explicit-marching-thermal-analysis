@@ -5,32 +5,38 @@ from mpl_toolkits.mplot3d import Axes3D
 from numpy.ma.core import shape, sqrt
 from matplotlib.animation import FuncAnimation
 
-l = 10
-w = 10
-cx = 20
-cy = 20
-dt = 0.01
+l = float(input("length: "))
+w = float(input("widht: "))
+cx = int(input("cells along x: "))
+cy = int(input("cells along y: "))
 bb = {
     'cells' : [],
-    't' : float(0)
+    't' : float(0),
+    'name' : "bottom"
 }
 rb = {
     'cells' : [],
-    't' : float(0)
+    't' : float(0),
+    'name' : "right"
 }
 tb = {
     'cells' : [],
-    't' : float(1)
+    't' : float(1),
+    'name' : "top"
 }
 lb = {
     'cells' : [],
-    't' : float(1)
+    't' : float(1),
+    'name' : "left"
 }
+for boundary in [lb,rb,bb,tb]:
+    boundary['t'] = input("Enter the Temp for " + boundary['name'] + " boundary: ")
 alpha = 1
 dx = l / cx
 dy = w / cy
 max_dt =(dx*dy)/(alpha*4)
 print("Maximum value of time step: ",max_dt)
+dt = float(input("Input Time step: "))
 if dt > max_dt:
     raise ValueError
     exit()
@@ -84,8 +90,8 @@ while True:
         break
     oldTemp = Temp
 
-print("Net time is ",net_time, "s")
-time = float(input("Input time: "))
+print("Net time to reach steady state is ",net_time, "s")
+time = float(input("Input time for Temp distribution graph: "))
 if time > net_time:
     raise ValueError
     exit()
@@ -94,25 +100,18 @@ z = TempxTime[:,:,time]
 plt.contourf(ycells, xcells,z,20,cmap=plt.cm.jet)
 plt.show()
 
-
 fig = plt.figure()
 
-
 def animate(i): 
-    z = TempxTime[:,:,i*20]
-    cont = plt.contourf(ycells, xcells, z,20,cmap=plt.cm.jet)
+    z = TempxTime[:,:,i]
+    cont = plt.contourf(ycells, xcells, z,10,cmap=plt.cm.jet)
 
     return cont  
 
-fr = int(iteration/20)
+fr = int(iteration)
 anim = FuncAnimation(fig, animate, frames=fr, interval= dt)
-anim.save('animation_unsteady.gif')
-
-
-
-
-
-
-
-
-
+plt.show(block= False)
+plt.pause(120)
+# activate command below to save the animation
+# anim.save('animation_unsteady.gif')
+exit()
