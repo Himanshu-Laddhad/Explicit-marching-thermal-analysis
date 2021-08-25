@@ -2,7 +2,8 @@ import matplotlib as mt
 import matplotlib.pyplot as plt
 import numpy as np
 from mpl_toolkits.mplot3d import Axes3D
-from numpy.ma.core import shape
+from numpy.ma.core import shape, sqrt
+from matplotlib.animation import FuncAnimation
 
 l = 10
 w = 10
@@ -49,11 +50,12 @@ for i in range(cx):
             lb['cells'].append((i,j))
 
 Temp = np.zeros(shape = (cx, cy,))
-TempxTime = np.zeros(shape= (cx, cy, 100000))
+TempxTime = np.zeros(shape= (cx, cy, 50000))
 iteration = int(0)
 net_time = 0
+oldTemp = Temp
 while True:
-    oldTemp = Temp
+    
     for i in range(cx):
         for j in range(cy):
             n = float(0)
@@ -75,11 +77,12 @@ while True:
                 n += oldTemp[i,j-1]
             n = ((float(alpha)*dt*n)/(dx*dy)) + ((1 - (dt/max_dt))*oldTemp[i,j])
             Temp[i,j] = n
-    iteration += 1
     net_time += dt
-    if iteration > 1000:
-        break
+    iteration += 1
     TempxTime[:,:,iteration] = Temp
+    if np.max(TempxTime[:,:,iteration] - TempxTime[:,:,iteration - 1]) < 0.000001:
+        break
+    oldTemp = Temp
 
 print("Net time is ",net_time, "s")
 time = float(input("Input time: "))
@@ -90,6 +93,22 @@ time = int(time/dt)
 z = TempxTime[:,:,time]
 plt.contourf(ycells, xcells,z,20,cmap=plt.cm.jet)
 plt.show()
+
+
+fig = plt.figure()
+
+
+def animate(i): 
+    z = TempxTime[:,:,i*5]
+    cont = plt.contourf(ycells, xcells, z,20,cmap=plt.cm.jet)
+
+    return cont  
+
+fr = int(iteration/5)
+anim = FuncAnimation(fig, animate, frames=fr, interval= dt)
+anim.save('animation_unsteady.mp4')
+
+
 
 
 
